@@ -1,0 +1,104 @@
+﻿
+
+<h2>Delete</h2>
+
+<h3>Estás seguro que quieres eliminar esto?</h3>
+<div>
+    <h4>Usuario</h4>
+    <hr />
+    <div id="messages"></div>
+    <input type="hidden" id="Id" value="" />
+    <dl class="dl-horizontal">
+        <dt>
+            <label for="Nombres">Nombres</label>
+        </dt>
+
+        <dd>
+            <span id="Nombres"></span>
+        </dd>
+
+        <dt>
+            <label for="Apellidos">Apellidos</label>
+        </dt>
+
+        <dd>
+            <span id="Apellidos"></span>
+        </dd>
+
+        <dt>
+            <label for="Username">Username</label>
+        </dt>
+
+        <dd>
+            <span id="Username"></span>
+        </dd>
+
+        <dt>
+            <label for="Fecha_Nacimiento">Fecha de Nacimiento</label>
+
+        <dd>
+            <span id="Fecha_Nacimiento"></span>
+        </dd>
+
+    </dl>
+
+        @Html.AntiForgeryToken()
+    
+        <div class="form-actions no-color">
+            <button id="Eliminar" class="btn btn-default">Eliminar</button>|
+            <a href="/Usuario/Index">Ir a la lista</a>
+        </div>
+
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        var url = location.href.split('/');
+        var id = url[5];
+        $('#Id').val(id);
+        var config = {
+            controller: "Usuario",
+            method: "SearchForId",
+            identifier: id
+        };
+        GET(config, function (message, data) {
+            if (message === 'error') {
+                errorMessages(data);
+            }
+            $("#Editar").attr("href", "/Usuario/Edit/" + data.Id);
+            var fecha = toJavaScriptDate(data.Fecha_Nacimiento);
+
+            $('#Nombres').text(data.Nombres);
+            $('#Apellidos').text(data.Apellidos);
+            $('#Username').text(data.Username);
+            $('#Fecha_Nacimiento').text(fecha);
+        });
+    });
+
+
+    $('#Eliminar').click(function () {
+        var jqueryFields = ['Id'];
+        var formData = fillArray(jqueryFields);
+        var config = {
+            fields: jqueryFields,
+            data: formData,
+            controller: 'Usuario',
+            method: 'Delete'
+        };
+        POST(config, function (message, data) {
+            if (message === 'error') {
+                errorMessages(data);
+                return;
+            }
+            //  Manipular data
+        });
+    });
+
+    var toJavaScriptDate = function (value) {
+        var patron = /Date\(([^]+)\)/;
+        var resultados = patron.exec(value);
+        var fecha = new Date(parseFloat(resultados[1]));
+        return (fecha.getDate() + "/" + (fecha.getMonth() + 1) + "/" + fecha.getFullYear());
+    };
+</script>

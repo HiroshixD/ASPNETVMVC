@@ -1,0 +1,53 @@
+﻿<h2>Index</h2>
+<p>
+<a href="/Usuario/Create">Crear Nuevo</a>
+</p>
+<table class="table">
+    <tr id="tableheader">
+        <th>
+            Nombres
+        </th>
+        <th>
+            Apellidos
+        <th>
+            Username
+        </th>
+        <th>
+            Fecha de Nacimiento
+        </th>
+        <th>Acciones</th>
+    </tr>
+    <tbody id="data">
+    </tbody>
+</table>
+
+<div id="pija"></div>
+
+<script>
+    $(document).ready(function () {
+        var config = {
+            controller: "Usuario",
+            method: "ListarTodos",
+            identifier: false
+        };
+        GET(config, function (message, data) {
+            if (message === 'error') {
+                alert('Tienes el siguiente error: ' + data);
+                return;
+            }
+            var tr;
+            for (var i = 0; i < data.length; i++) {
+                tr = $('<tr/>');
+                tr.append("<td>" + data[i].Nombres + "</td>");
+                tr.append("<td>" + data[i].Apellidos + "</td>");
+                tr.append("<td>" + data[i].Username + "</td>");
+                tr.append("<td>" + toJavaScriptDate(data[i].Fecha_Nacimiento) + "</td>");
+                tr.append("<td><a href=/Usuario/Edit/" + data[i].Id + ">Editar </a> | <a href=/Usuario/Details/" + data[i].Id + ">Detalles </a> | <a href=/Usuario/Delete/" + data[i].Id + ">Eliminar</a></td>");
+                $('#data').append(tr);
+            }
+        });
+    });
+
+
+</script>
+

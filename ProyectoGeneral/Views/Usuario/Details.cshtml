@@ -1,0 +1,71 @@
+﻿
+<h2>Details</h2>
+
+<div>
+    <h4>Usuario</h4>
+	<hr />
+    <dl class="dl-horizontal">
+        <dt>
+            <label for="Nombres">Nombres</label> 
+        </dt>
+
+        <dd>
+            <span id="Nombres"></span>
+        </dd>
+
+        <dt>
+            <label for="Apellidos">Apellidos</label>
+        </dt>
+
+        <dd>
+            <span id="Apellidos"></span>
+        </dd>
+
+        <dt>
+            <label for="Username">Username</label>
+        </dt>
+
+        <dd>
+            <span id="Username"></span>
+        </dd>
+
+        <dt>
+            <label for="Fecha_Nacimiento">Fecha_Nacimiento</label>
+        </dt>
+
+        <dd>
+            <span id="Fecha_Nacimiento"></span>
+        </dd>
+
+    </dl>
+</div>
+<p>
+    <a id="Editar" href="#">Editar</a>
+    <a id="Lista" href="/Usuario/Index">Lista</a>
+</p>
+
+
+<script>
+
+    $(document).ready(function () {
+        var url = location.href.split('/');
+        var id = url[5];
+        var config = {
+            controller: "Usuario",
+            method: "SearchForId",
+            identifier: id
+        };
+        GET(config, function (message, data) {
+            if (message === 'error') {
+                errorMessages(data);
+            }
+            $("#Editar").attr("href", "/Usuario/Edit/" + data.Id);
+            var fecha = toJavaScriptDate(data.Fecha_Nacimiento);
+
+            $('#Nombres').text(data.Nombres);
+            $('#Apellidos').text(data.Apellidos);
+            $('#Username').text(data.Username);
+            $('#Fecha_Nacimiento').text(fecha);
+        });
+    });
+</script>
